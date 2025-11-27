@@ -1,0 +1,328 @@
+.main-content-alumnos {
+    margin-left: 220px;
+    transition: margin-left 0.3s;
+}
+
+@media (max-width: 991px) {
+    .main-content-alumnos {
+        margin-left: 0;
+    }
+}
+
+.wrapper {
+    height: auto;
+}
+
+.header-home,
+.header-home-alumnos {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+.body-alumnos,
+.body-admin {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.container {
+    max-width: 90vw;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    min-height: 1px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.07);
+}
+
+.alert .title-table {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.alert-warning {
+    font-family: Nexa;
+    font-size: 16px;
+    color: #231F20;
+    text-align: center;
+    background: #FFF3CD;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.07);
+    width: 100%;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.title-table {
+    margin-left: 3rem;
+    font-size: 28px;
+    text-align: left;
+    font-family: Nexa-Bold;
+    letter-spacing: 0px;
+    text-transform: capitalize;
+    opacity: 1;
+}
+
+.table-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    min-height: 1px;
+    margin: 0 auto;
+    background: var(--table-bg, #fff);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.07);
+    display: flex;
+    flex-direction: column;
+}
+
+table {
+    width: 100%;
+    padding-bottom: 1.5rem;
+}
+
+::ng-deep .mat-mdc-table {
+    table-layout: fixed !important;
+}
+
+.mat-mdc-header-cell {
+    border-bottom-color: var(--table-header-border, #231F20);
+    font-family: Nexa-Bold !important;
+    font-size: 18px;
+    text-align: left;
+    letter-spacing: 0px;
+    opacity: 1;
+    color: var(--text-main, #fff) !important;
+}
+
+.mat-mdc-cell {
+    text-align: left;
+    font-family: Nexa !important;
+    font-size: 15px !important;
+    letter-spacing: 0px !important;
+    color: var(--text-main, #fff) !important;
+    opacity: 1 !important;
+}
+
+.td-editar {
+    color: #0092B8 !important;
+    cursor: pointer !important;
+    font-size: 20px !important;
+    text-align: center;
+}
+
+.td-editar:hover {
+    color: #006179 !important;
+    font-size: 25px !important;
+    text-align: center;
+}
+
+.td-eliminar {
+    color: #E84150 !important;
+    cursor: pointer !important;
+    font-size: 20px !important;
+    text-align: center;
+}
+
+.td-eliminar:hover {
+    color: #ce1626 !important;
+    font-size: 25px !important;
+    text-align: center;
+}
+
+.title-perfil,
+.title-table {
+    display: block;
+    line-height: 1.1;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+    letter-spacing: 0;
+    text-transform: capitalize;
+    opacity: 1;
+    font-family: Nexa-Bold;
+}
+
+.title-perfil {
+    margin-left: 3rem;
+    font-size: clamp(1.375rem, 1.1rem + 1.2vw, 2.25rem);
+    text-align: left;
+    color: #231F20;
+}
+
+.title-table {
+    margin-left: 3rem;
+    font-size: clamp(1.125rem, 0.95rem + 0.9vw, 1.875rem);
+    text-align: center;
+    color: #231F20;
+}
+
+@media (min-width: 635px) and (max-width: 660px) {
+    .title-perfil {
+        font-size: clamp(1.25rem, 0.9rem + 1vw, 1.9rem);
+        letter-spacing: -0.01em;
+    }
+
+    .title-table {
+        font-size: clamp(1.05rem, 0.85rem + 0.7vw, 1.6rem);
+    }
+}
+
+@media (min-width: 576px) and (max-width: 699px) {
+    .row.mt-5.mb-5>.col-12 br {
+        display: none;
+    }
+
+    .title-perfil,
+    .title-table {
+        text-align: left;
+        margin-left: 1.5rem;
+    }
+
+    .row .col-12 .title-perfil:first-of-type {
+        font-size: clamp(1.25rem, 1.0rem + 1.1vw, 1.9rem);
+        line-height: 1.15;
+        margin-bottom: 0.4rem;
+    }
+
+    .row .col-12 .title-perfil:last-of-type {
+        text-align: left;
+        font-size: clamp(1.2rem, 0.95rem + 1vw, 1.7rem);
+        line-height: 1.15;
+        margin-top: 0.25rem;
+    }
+
+    .row.mt-5.mb-5>.col-12 {
+        margin-top: 1rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+
+    .alert .title-table {
+        margin-left: 0;
+    }
+}
+
+@media (min-width: 700px) and (max-width: 740px) {
+    .row.mt-5.mb-5>.col-12 br {
+        display: none;
+    }
+
+    .title-perfil,
+    .title-table {
+        text-align: left;
+        margin-left: 3rem;
+    }
+
+    .row .col-12 .title-perfil:first-of-type {
+        margin-bottom: 0.4rem;
+    }
+
+    .row .col-12 .title-perfil:last-of-type {
+        margin-top: 0.25rem;
+    }
+}
+
+
+@media (min-width: 741px) {
+
+    .title-perfil,
+    .title-table {
+        text-align: left;
+        margin-left: 3rem;
+    }
+
+    .row .col-12 .title-perfil:last-of-type {
+        font-size: clamp(1.25rem, 1rem + 1.1vw, 1.875rem);
+        line-height: 1.15;
+    }
+}
+
+@media (max-width: 575px) {
+    .row.mt-5.mb-5>.col-12 br {
+        display: none;
+    }
+
+    .title-perfil,
+    .title-table {
+        margin-left: 0;
+        text-align: center;
+    }
+
+    .row .col-12 .title-perfil:first-of-type {
+        font-size: clamp(1.35rem, 1.1rem + 1.6vw, 2rem);
+        line-height: 1.15;
+        margin-bottom: 0.35rem;
+    }
+
+    .row .col-12 .title-perfil:last-of-type {
+        font-size: clamp(1.4rem, 1.15rem + 1.7vw, 2.1rem);
+        line-height: 1.15;
+        margin-top: 0.25rem;
+    }
+
+    .row.mt-5.mb-5>.col-12 {
+        margin-top: 0.9rem !important;
+        margin-bottom: 0.7rem !important;
+    }
+
+    .alert .title-table {
+        margin: 0;
+        line-height: 1.2;
+        padding: 0 8px;
+    }
+
+    .mat-mdc-header-cell {
+        font-size: 16px;
+    }
+
+    .mat-mdc-cell {
+        font-size: 14px !important;
+        line-height: 1.25;
+    }
+
+    .table-responsive {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+
+@media (max-width: 992px) and (min-width: 805px) {
+    .container {
+        max-width: 95vw;
+        width: 130%;
+        margin: 0 auto;
+    }
+
+    .table-responsive {
+        max-width: 95vw;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .table {
+        min-width: 700px;
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 575px) {
+    .user-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: min(92vw, 540px);
+        display: inline-block;
+        vertical-align: bottom;
+    }
+}
