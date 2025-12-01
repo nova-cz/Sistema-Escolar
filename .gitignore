@@ -1,0 +1,130 @@
+# ===========================
+# macOS
+# ===========================
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ===========================
+# PDFs y Documentos
+# ===========================
+*.pdf
+
+# ===========================
+# Python / Django
+# ===========================
+*.py[cod]
+*$py.class
+*.so
+.Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+/media
+/staticfiles
+*.pot
+
+# Migrations (opcional - descomenta si no quieres subir migraciones)
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+# ===========================
+# Node / Angular
+# ===========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Angular
+/Front/dist/
+/Front/.angular/
+/Front/tmp/
+/Front/out-tsc/
+*.tgz
+
+# Package files
+package-lock.json
+yarn.lock
+
+# ===========================
+# IDEs y Editores
+# ===========================
+# VSCode
+.vscode/
+*.code-workspace
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# PyCharm
+.idea/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ===========================
+# Variables de Entorno
+# ===========================
+.env
+.env.local
+.env.*.local
+*.local
+
+# ===========================
+# Logs
+# ===========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===========================
+# Testing
+# ===========================
+/coverage
+/.nyc_output
+.coverage
+.pytest_cache/
+htmlcov/
+
+# ===========================
+# Build / Dist
+# ===========================
+build/
+dist/
+*.egg-info/
+
+# ===========================
+# OS generated files
+# ===========================
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ===========================
+# Archivos temporales
+# ===========================
+*.swp
+*.swo
+*~
+.cache

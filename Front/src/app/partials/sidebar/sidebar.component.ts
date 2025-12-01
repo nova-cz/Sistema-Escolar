@@ -11,6 +11,7 @@ export class SidebarComponent implements OnInit {
   mobileOpen = false;
   isMobileView = window.innerWidth < 900;
   userRole: string = '';
+  registroMenuOpen = false;
 
   constructor(
     private router: Router,
@@ -30,12 +31,23 @@ export class SidebarComponent implements OnInit {
     }
   }
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    const target = event.target as HTMLElement;
+    const clickedInside = target.closest('.registro-menu-item');
+    
+    if (!clickedInside && this.registroMenuOpen) {
+      this.registroMenuOpen = false;
+    }
+  }
+
   toggleSidebar() {
     this.mobileOpen = !this.mobileOpen;
   }
 
   closeSidebar() {
     this.mobileOpen = false;
+    this.registroMenuOpen = false;
   }
 
   logout() {
@@ -48,7 +60,6 @@ export class SidebarComponent implements OnInit {
       },
       (error) => {
         console.error('Logout error:', error);
-        // Fallback: clear local data and navigate anyway
         this.facadeService.destroyUser();
         this.router.navigate(['/login']);
         this.closeSidebar();
@@ -56,7 +67,7 @@ export class SidebarComponent implements OnInit {
     );
   }
 
-  // Helper methods to check user roles
+  // Role checks
   isAdmin(): boolean {
     return this.userRole === 'administrador';
   }
@@ -69,27 +80,79 @@ export class SidebarComponent implements OnInit {
     return this.userRole === 'alumno';
   }
 
-  // Check if user can see admin-only items
   canSeeAdminItems(): boolean {
     return this.isAdmin();
   }
 
-  // Check if user can see teacher-level items
   canSeeTeacherItems(): boolean {
     return this.isAdmin() || this.isTeacher();
   }
 
-  // Check if user can see all items (admin, teacher, student)
   canSeeStudentItems(): boolean {
     return this.isAdmin() || this.isTeacher() || this.isStudent();
   }
 
-  // Check if user can see Inicio (admin and teacher only, not student)
   canSeeHomeItem(): boolean {
     return this.isAdmin() || this.isTeacher();
   }
 
   canSeeRegisterItem(): boolean {
     return this.isAdmin() || this.isTeacher();
+  }
+
+  canRegisterStudents(): boolean {
+    return this.isAdmin() || this.isTeacher();
+  }
+
+  canRegisterTeachers(): boolean {
+    return this.isAdmin();
+  }
+
+  canRegisterAdmins(): boolean {
+    return this.isAdmin();
+  }
+
+  canRegisterEvents(): boolean {
+    return this.isAdmin();
+  }
+
+  // Toggle dropdown menu - SOLO abre/cierra, NO navega
+  toggleRegistroMenu(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation(); // CRÍTICO: detiene TODOS los handlers
+    this.registroMenuOpen = !this.registroMenuOpen;
+    console.log('✅ Dropdown toggled:', this.registroMenuOpen);
+    // NO llamar a router.navigate aquí
+    return; // Asegura que no se ejecute nada más
+  }
+
+  // NUEVO método que SOLO navega cuando seleccionas una opción
+  navigateToRegistro(tipo: string, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    console.log('🚀 Navegando a registro de:', tipo);
+    
+    // Cerrar dropdown
+    this.registroMenuOpen = false;
+    
+    // Cerrar sidebar en mobile
+    if (this.isMobileView) {
+      this.closeSidebar();
+    }
+    
+    // Navegar con queryParams
+    this.router.navigate(['/registro-usuarios'], { 
+      queryParams: { tipo: tipo }
+    });
+  }
+
+  // Método legacy - ya no se usa
+  closeRegistroMenu(): void {
+    this.registroMenuOpen = false;
+    if (this.isMobileView) {
+      this.closeSidebar();
+    }
   }
 }

@@ -46,6 +46,12 @@
               <mat-icon class="me-1" fontIcon="person"></mat-icon>
               <span class="text-radio">Maestro</span>
             </mat-radio-button>
+
+            <mat-radio-button class="role-pill" value="evento"
+              *ngIf="!facadeService.getUserGroup() || facadeService.getUserGroup() === 'administrador'">
+              <mat-icon class="me-1" fontIcon="event"></mat-icon>
+              <span class="text-radio">Evento Académico</span>
+            </mat-radio-button>
           </mat-radio-group>
         </div>
       </mat-card-content>
@@ -60,6 +66,8 @@
 
       <app-registro-maestros *ngIf="isMaestro" [rol]="tipo_user"
         [datos_user]="editar ? user : null"></app-registro-maestros>
+
+      <app-registro-eventos *ngIf="isEvento" [rol]="tipo_user" [datos_user]="user"></app-registro-eventos>
 
     </div>
   </div>

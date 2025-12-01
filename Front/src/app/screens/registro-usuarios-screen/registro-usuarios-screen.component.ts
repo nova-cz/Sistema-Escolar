@@ -24,6 +24,7 @@ export class RegistroUsuariosScreenComponent implements OnInit {
   public isAdmin: boolean = false;
   public isAlumno: boolean = false;
   public isMaestro: boolean = false;
+  public isEvento: boolean = false;
 
   public tipo_user: string = "";
 
@@ -39,6 +40,15 @@ export class RegistroUsuariosScreenComponent implements OnInit {
 
   ngOnInit(): void {
     this.user.tipo_usuario = '';
+
+    // Detectar parámetro 'tipo' en query params para pre-seleccionar el tipo de usuario
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params['tipo']) {
+        this.user.tipo_usuario = params['tipo'];
+        this.radioChange({ value: params['tipo'] } as MatRadioChange);
+      }
+    });
+
     //Obtener de la URL el rol para saber cual editar
     if (this.activatedRoute.snapshot.params['rol'] != undefined) {
       this.rol = this.activatedRoute.snapshot.params['rol'];
@@ -61,17 +71,26 @@ export class RegistroUsuariosScreenComponent implements OnInit {
       this.isAdmin = true;
       this.isAlumno = false;
       this.isMaestro = false;
+      this.isEvento = false;
       this.tipo_user = "administrador";
     } else if (event.value == "alumno") {
       this.isAdmin = false;
       this.isAlumno = true;
       this.isMaestro = false;
+      this.isEvento = false;
       this.tipo_user = "alumno";
     } else if (event.value == "maestro") {
       this.isAdmin = false;
       this.isAlumno = false;
       this.isMaestro = true;
+      this.isEvento = false;
       this.tipo_user = "maestro";
+    } else if (event.value == "evento") {
+      this.isAdmin = false;
+      this.isAlumno = false;
+      this.isMaestro = false;
+      this.isEvento = true;
+      this.tipo_user = "evento";
     }
   }
 

@@ -29,3 +29,11 @@ class MaestroSerializer(serializers.ModelSerializer):
     class Meta:
         model = Maestros
         fields = '__all__'
+
+class EventoAcademicoSerializer(serializers.ModelSerializer):
+    responsable = UserSerializer(read_only=True)
+    responsable_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
+    
+    class Meta:
+        model = EventoAcademico
+        fields = '__all__'

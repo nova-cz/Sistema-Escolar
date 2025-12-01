@@ -1,0 +1,149 @@
+.reg-card {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.horario-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.horario-field {
+    width: 100%;
+}
+
+.cross-validation-error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background-color: #ffebee;
+    border-left: 4px solid #f44336;
+    border-radius: 4px;
+    color: #c62828;
+    font-size: 0.875rem;
+    margin: -0.5rem 0 0.5rem 0;
+
+    mat-icon {
+        color: #f44336;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.info-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+
+    mat-icon {
+        color: #666;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+    }
+
+    span {
+        color: #666;
+        font-size: 0.875rem;
+        line-height: 1.4;
+    }
+}
+
+mat-card-actions {
+    padding: 1rem 1.5rem;
+
+    button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-width: 180px;
+
+        &:disabled {
+            opacity: 0.6;
+        }
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .horario-row {
+        grid-template-columns: 1fr;
+    }
+
+    .reg-card {
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    mat-card-actions button {
+        width: 100%;
+        min-width: unset;
+    }
+}
+
+// Mejorar apariencia de los inputs de tiempo
+input[type="time"] {
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+// Estilo para el contador de caracteres
+mat-hint[align="end"] {
+    font-size: 0.75rem;
+    color: #666;
+}
+
+// Separación entre campos
+mat-form-field+mat-form-field {
+    margin-top: 0;
+}
+
+// Botón de registrar - Estilo azul personalizado
+.btn-registrar {
+    background-color: #00ACC1; // Cyan/turquoise
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 32px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s ease;
+    min-width: 180px;
+    justify-content: center;
+
+    &:hover:not(:disabled) {
+        background-color: #00BCD4;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+    }
+}

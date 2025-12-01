@@ -28,6 +28,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { ReactiveFormsModule } from '@angular/forms'; // Para formularios reactivos con validaciones
 
 //Importar modulo para ordenar
 import { MatSortModule } from '@angular/material/sort';
@@ -47,6 +49,7 @@ import { NgChartsModule } from 'ng2-charts';
 
 // Third Party Modules
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { HomeScreenComponent } from './screens/home-screen/home-screen.component';
 import { AdminScreenComponent } from './screens/admin-screen/admin-screen.component';
 import { AlumnosScreenComponent } from './screens/alumnos-screen/alumnos-screen.component';
@@ -55,6 +58,7 @@ import { NavbarUserComponent } from './partials/navbar-user/navbar-user.componen
 import { SidebarComponent } from './partials/sidebar/sidebar.component';
 import { EliminarUserModalComponent } from './modals/eliminar-user-modal/eliminar-user-modal.component';
 import { GraficasScreenComponent } from './screens/graficas-screen/graficas-screen.component';
+import { RegistroEventosComponent } from './partials/registro-eventos/registro-eventos.component';
 
 @NgModule({
   declarations: [
@@ -73,13 +77,15 @@ import { GraficasScreenComponent } from './screens/graficas-screen/graficas-scre
     NavbarUserComponent,
     SidebarComponent,
     EliminarUserModalComponent,
-    GraficasScreenComponent
+    GraficasScreenComponent,
+    RegistroEventosComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     MatCardModule,
     MatIconModule,
@@ -97,7 +103,9 @@ import { GraficasScreenComponent } from './screens/graficas-screen/graficas-scre
     MatPaginatorModule,
     MatDialogModule,
     MatButtonModule,
-    NgChartsModule
+    MatMenuModule,
+    NgChartsModule,
+    NgxMaterialTimepickerModule
   ],
   providers: [
     CookieService,

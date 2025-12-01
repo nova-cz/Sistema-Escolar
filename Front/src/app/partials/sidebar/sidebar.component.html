@@ -3,54 +3,101 @@
     (closedStart)="closeSidebar()" [disableClose]="!isMobileView">
     <nav>
       <ul class="sidebar-list">
-        <!-- Inicio - Available for admin and teachers only -->
+        <!-- Inicio -->
         <li *ngIf="canSeeHomeItem()" routerLink="/home" routerLinkActive="active" (click)="closeSidebar()">
           <mat-icon>home</mat-icon>
           <span>Inicio</span>
         </li>
-        <li *ngIf="canSeeRegisterItem()" routerLink="/registro-usuarios" routerLinkActive="active"
-          (click)="closeSidebar()">
-          <mat-icon>person_add</mat-icon>
-          <span>Registro</span>
+
+        <!-- Registro Dropdown - CRÍTICO: NO usar routerLink aquí -->
+        <li *ngIf="canSeeRegisterItem()" 
+            class="registro-menu-item" 
+            [class.open]="registroMenuOpen">
+          <!-- Wrapper que captura el click SIN navegar -->
+          <div class="menu-item-wrapper" 
+               (click)="toggleRegistroMenu($event)"
+               (mousedown)="$event.preventDefault()">
+            <mat-icon>person_add</mat-icon>
+            <span>Registro</span>
+            <mat-icon class="dropdown-icon">{{registroMenuOpen ? 'expand_less' : 'expand_more'}}</mat-icon>
+          </div>
+
+          <!-- Dropdown Panel -->
+          <ul class="registro-dropdown-panel" *ngIf="registroMenuOpen">
+            <!-- Alumno -->
+            <li *ngIf="canRegisterStudents()">
+              <a (click)="navigateToRegistro('alumno', $event)" class="dropdown-item">
+                <mat-icon>school</mat-icon>
+                <span>Alumno</span>
+              </a>
+            </li>
+            
+            <!-- Maestro -->
+            <li *ngIf="canRegisterTeachers()">
+              <a (click)="navigateToRegistro('maestro', $event)" class="dropdown-item">
+                <mat-icon>person</mat-icon>
+                <span>Maestro</span>
+              </a>
+            </li>
+            
+            <!-- Administrador -->
+            <li *ngIf="canRegisterAdmins()">
+              <a (click)="navigateToRegistro('administrador', $event)" class="dropdown-item">
+                <mat-icon>admin_panel_settings</mat-icon>
+                <span>Administrador</span>
+              </a>
+            </li>
+            
+            <!-- Evento Académico -->
+            <li *ngIf="canRegisterEvents()">
+              <a (click)="navigateToRegistro('evento', $event)" class="dropdown-item">
+                <mat-icon>event</mat-icon>
+                <span>Evento Académico</span>
+              </a>
+            </li>
+          </ul>
         </li>
 
-        <!-- Admins - Only for administrators -->
+        <!-- Admins -->
         <li *ngIf="canSeeAdminItems()" routerLink="/administrador" routerLinkActive="active" (click)="closeSidebar()">
           <mat-icon>admin_panel_settings</mat-icon>
           <span>Admins</span>
         </li>
 
-        <!-- Maestros - Only for administrators -->
+        <!-- Maestros -->
         <li *ngIf="canSeeAdminItems()" routerLink="/maestros" routerLinkActive="active" (click)="closeSidebar()">
           <mat-icon>people</mat-icon>
           <span>Maestros</span>
         </li>
 
-        <!-- Alumnos - Available for all users -->
+        <!-- Alumnos -->
         <li *ngIf="canSeeStudentItems()" routerLink="/alumnos" routerLinkActive="active" (click)="closeSidebar()">
           <mat-icon>school</mat-icon>
           <span>Alumnos</span>
         </li>
 
-        <!-- Gráficas - Available for all users -->
+        <!-- Gráficas -->
         <li *ngIf="canSeeStudentItems()" routerLink="/graficas" routerLinkActive="active" (click)="closeSidebar()">
           <mat-icon>bar_chart</mat-icon>
           <span>Gráficas</span>
         </li>
 
-        <!-- Eventos Académicos - Available for administrators and teachers -->
-        <li *ngIf="canSeeTeacherItems()" routerLink="/eventos-academicos" routerLinkActive="active" class="eventos-academicos" (click)="closeSidebar()">
+        <!-- Eventos Académicos -->
+        <li *ngIf="canSeeTeacherItems()" routerLink="/eventos-academicos" routerLinkActive="active"
+          (click)="closeSidebar()">
           <mat-icon>event</mat-icon>
           <span>Eventos Académicos</span>
         </li>
       </ul>
+
       <button mat-flat-button color="warn" class="logout-btn" (click)="logout()">
         <mat-icon>logout</mat-icon>
         <span>Cerrar sesión</span>
       </button>
     </nav>
   </mat-sidenav>
+  
   <mat-sidenav-content>
-    <!-- Main content goes here -->
+    <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
