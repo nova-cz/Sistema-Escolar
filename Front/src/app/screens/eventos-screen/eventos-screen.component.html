@@ -1,0 +1,132 @@
+<div class="wrapper main-content-eventos">
+    <div class="header-home-eventos">
+    </div>
+    <div class="body-eventos">
+        <div class="row mt-5 mb-5">
+            <div class="col-12">
+                <span class="title-perfil">Bienvenido {{name_user}}</span>
+                <br>
+                <span class="title-perfil">{{rol}}</span>
+            </div>
+            <div class="container">
+                <div class="row mt-3 mb-5" style="text-align: center;">
+                    <div class="col-12">
+                        <div class="alert alert-primary" role="alert">
+                            <span class="title-table">Lista De Eventos Académicos Registrados</span>
+                        </div>
+                    </div>
+
+                    <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 1rem;">
+                        <mat-label>Buscar Evento</mat-label>
+                        <input matInput (keyup)="applyFilter($event)" placeholder="Buscar por nombre, tipo, lugar, etc."
+                            #input>
+                    </mat-form-field>
+
+                    <ng-container *ngIf="lista_eventos.length > 0; else noData">
+                        <div class="table-scroll-wrapper">
+                            <div class="mat-elevation-z8">
+
+                                <table mat-table [dataSource]="dataSource" matSort matSortStart="asc"
+                                    matSortDisableClear style="width: 100%;">
+
+                                    <!-- Columna ID -->
+                                    <ng-container matColumnDef="id">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                                        <td mat-cell *matCellDef="let evento"> {{evento.id}} </td>
+                                    </ng-container>
+
+                                    <!-- Columna Nombre -->
+                                    <ng-container matColumnDef="nombre">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre del Evento </th>
+                                        <td mat-cell *matCellDef="let evento"> {{evento.nombre}} </td>
+                                    </ng-container>
+
+                                    <!-- Columna Tipo -->
+                                    <ng-container matColumnDef="tipo">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+                                        <td mat-cell *matCellDef="let evento"> {{evento.tipo_display}} </td>
+                                    </ng-container>
+
+                                    <!-- Columna Fecha -->
+                                    <ng-container matColumnDef="fecha">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+                                        <td mat-cell *matCellDef="let evento"> {{evento.fecha | date: 'dd/MM/yyyy'}}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Columna Horario -->
+                                    <ng-container matColumnDef="horario">
+                                        <th mat-header-cell *matHeaderCellDef> Horario </th>
+                                        <td mat-cell *matCellDef="let evento"> {{evento.horario_display}} </td>
+                                    </ng-container>
+
+                                    <!-- Columna Lugar -->
+                                    <ng-container matColumnDef="lugar">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Lugar </th>
+                                        <td mat-cell *matCellDef="let evento"> {{evento.lugar}} </td>
+                                    </ng-container>
+
+                                    <!-- Columna Público Objetivo -->
+                                    <ng-container matColumnDef="publico_objetivo">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Público </th>
+                                        <td mat-cell *matCellDef="let evento"> {{evento.publico_display}} </td>
+                                    </ng-container>
+
+                                    <!-- Columna Responsable -->
+                                    <ng-container matColumnDef="responsable">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Responsable </th>
+                                        <td mat-cell *matCellDef="let evento"> {{evento.responsable_nombre}} </td>
+                                    </ng-container>
+
+                                    <!-- Columna Cupo Máximo -->
+                                    <ng-container matColumnDef="cupo_maximo">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cupo </th>
+                                        <td mat-cell *matCellDef="let evento"> {{evento.cupo_maximo}} </td>
+                                    </ng-container>
+
+                                    <!-- Columna Editar (SOLO ADMIN) -->
+                                    <ng-container matColumnDef="editar">
+                                        <th mat-header-cell *matHeaderCellDef> Editar </th>
+                                        <td mat-cell *matCellDef="let evento" class="td-editar">
+                                            <i class="bi bi-pencil-square" (click)="editarEvento(evento)"></i>
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Columna Eliminar (SOLO ADMIN) -->
+                                    <ng-container matColumnDef="eliminar">
+                                        <th mat-header-cell *matHeaderCellDef> Eliminar </th>
+                                        <td mat-cell *matCellDef="let evento" class="td-eliminar">
+                                            <i class="bi bi-trash3-fill" (click)="eliminarEvento(evento)"></i>
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                    <tr class="mat-row" *matNoDataRow>
+                                        <td class="mat-cell" colspan="11" style="text-align: center; padding: 20px 0;">
+                                            No se encontraron eventos que coincidan con la búsqueda.
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                                aria-label="Select page of eventos">
+                            </mat-paginator>
+                        </div>
+                    </ng-container>
+
+                    <ng-template #noData>
+                        <div class="col-12">
+                            <div class="alert alert-warning" role="alert">
+                                No hay eventos registrados.
+                            </div>
+                        </div>
+                    </ng-template>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -35,7 +35,7 @@ export class SidebarComponent implements OnInit {
   onDocumentClick(event: Event) {
     const target = event.target as HTMLElement;
     const clickedInside = target.closest('.registro-menu-item');
-    
+
     if (!clickedInside && this.registroMenuOpen) {
       this.registroMenuOpen = false;
     }
@@ -131,21 +131,33 @@ export class SidebarComponent implements OnInit {
   navigateToRegistro(tipo: string, event: Event): void {
     event.preventDefault();
     event.stopPropagation();
-    
+
     console.log('🚀 Navegando a registro de:', tipo);
-    
+
     // Cerrar dropdown
     this.registroMenuOpen = false;
-    
+
     // Cerrar sidebar en mobile
     if (this.isMobileView) {
       this.closeSidebar();
     }
-    
+
     // Navegar con queryParams
-    this.router.navigate(['/registro-usuarios'], { 
+    this.router.navigate(['/registro-usuarios'], {
       queryParams: { tipo: tipo }
     });
+  }
+
+  // Navegar a eventos académicos
+  navigateToEventos(): void {
+    console.log('🎓 Navegando a eventos académicos');
+
+    // Cerrar sidebar en mobile
+    if (this.isMobileView) {
+      this.closeSidebar();
+    }
+
+    this.router.navigate(['/eventos-academicos']);
   }
 
   // Método legacy - ya no se usa
