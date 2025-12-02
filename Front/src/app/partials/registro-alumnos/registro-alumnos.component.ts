@@ -21,6 +21,7 @@ export class RegistroAlumnosComponent implements OnInit {
   public hide_2: boolean = false;
   public inputType_1: string = 'password';
   public inputType_2: string = 'password';
+  public maxDate: Date;
 
   public alumno: any = {};
   public token: string = "";
@@ -43,6 +44,10 @@ export class RegistroAlumnosComponent implements OnInit {
     this.alumno.rol = this.rol;
 
     console.log("Datos alumno: ", this.alumno);
+
+    // Inicializar maxDate a 18 años atrás
+    const today = new Date();
+    this.maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
 
     //Checar si se va a editar
     if (this.activatedRoute.snapshot.params['id'] != undefined) {
@@ -158,14 +163,7 @@ export class RegistroAlumnosComponent implements OnInit {
     }
   }
 
-  //Función para detectar el cambio de fecha
-  public changeFecha(event: any) {
-    console.log(event);
-    console.log(event.value.toISOString());
 
-    this.alumno.fecha_nacimiento = event.value.toISOString().split("T")[0];
-    console.log("Fecha: ", this.alumno.fecha_nacimiento);
-  }
 
   public soloLetras(event: KeyboardEvent) {
     const charCode = event.key.charCodeAt(0);
@@ -177,6 +175,91 @@ export class RegistroAlumnosComponent implements OnInit {
     ) {
       event.preventDefault();
     }
+  }
+
+  public soloNumeros(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0);
+    // Permitir solo números (0-9)
+    if (!(charCode >= 48 && charCode <= 57)) {
+      event.preventDefault();
+    }
+  }
+
+  public noEspacios(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0);
+    // No permitir espacios
+    if (charCode === 32) {
+      event.preventDefault();
+    }
+  }
+
+  public onInputLetras(event: any, field: string) {
+    const input = event.target;
+    const value = input.value;
+    const sanitized = value.replace(/[^a-zA-ZñÑáéíóúÁÉÍÓÚ\s]/g, '');
+    if (value !== sanitized) {
+      input.value = sanitized;
+      this.alumno[field] = sanitized;
+    }
+  }
+
+  public onInputNumeros(event: any, field: string) {
+    const input = event.target;
+    const value = input.value;
+    const sanitized = value.replace(/[^0-9]/g, '');
+    if (value !== sanitized) {
+      input.value = sanitized;
+      this.alumno[field] = sanitized;
+    }
+  }
+
+  public onInputNoEspacios(event: any, field: string) {
+    const input = event.target;
+    const value = input.value;
+    const sanitized = value.replace(/\s/g, '');
+    if (value !== sanitized) {
+      input.value = sanitized;
+      this.alumno[field] = sanitized;
+    }
+  }
+
+  public onInputEmail(event: any) {
+    const input = event.target;
+    const value = input.value;
+    // Permitir solo caracteres válidos para email (letras, números, @, ., -, _)
+    const sanitized = value.replace(/[^a-zA-Z0-9@._-]/g, '');
+    if (value !== sanitized) {
+      input.value = sanitized;
+      this.alumno.email = sanitized;
+    }
+  }
+
+  public onInputRFC(event: any) {
+    const input = event.target;
+    const value = input.value;
+    // Permitir solo letras y números y truncar a 13 caracteres
+    const sanitized = value.replace(/[^a-zA-Z0-9]/g, '').substring(0, 13);
+    input.value = sanitized;
+    this.alumno.rfc = sanitized;
+  }
+
+  //Función para detectar el cambio de fecha
+  public changeFecha(event: any) {
+    console.log(event);
+    console.log(event.value.toISOString());
+
+    this.alumno.fecha_nacimiento = event.value.toISOString().split("T")[0];
+    console.log("Fecha: ", this.alumno.fecha_nacimiento);
+
+    // Calcular edad
+    const today = new Date();
+    const birthDate = new Date(event.value);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    this.alumno.edad = age;
   }
 
 }

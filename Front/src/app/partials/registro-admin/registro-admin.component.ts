@@ -27,6 +27,7 @@ export class RegistroAdminComponent implements OnInit {
   public hide_2: boolean = false;
   public inputType_1: string = 'password';
   public inputType_2: string = 'password';
+  public maxDate: Date;
 
   constructor(
     private location: Location,
@@ -55,6 +56,9 @@ export class RegistroAdminComponent implements OnInit {
     //Imprimir datos en consola
     console.log("Admin: ", this.admin);
 
+    // Inicializar maxDate a 18 años atrás
+    const today = new Date();
+    this.maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
   }
 
   //Funciones para password
@@ -166,5 +170,104 @@ export class RegistroAdminComponent implements OnInit {
     ) {
       event.preventDefault();
     }
+  }
+
+  public soloNumeros(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0);
+    // Permitir solo números (0-9)
+    if (!(charCode >= 48 && charCode <= 57)) {
+      event.preventDefault();
+    }
+  }
+
+  public noEspacios(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0);
+    // No permitir espacios
+    if (charCode === 32) {
+      event.preventDefault();
+    }
+  }
+
+  // Eventos Paste
+  public pasteSoloLetras(event: ClipboardEvent, model: string) {
+    event.preventDefault();
+    const clipboardData = event.clipboardData;
+    const pastedText = clipboardData?.getData('text') || '';
+    // Solo letras y espacios
+    const sanitizedText = pastedText.replace(/[^a-zA-ZñÑáéíóúÁÉÍÓÚ\s]/g, '');
+    // Insertar texto sanitizado (esto es simplificado, idealmente se maneja la posición del cursor)
+    // Para simplificar en Angular con ngModel, actualizamos el modelo directamente si es posible,
+    // pero aquí solo devolvemos el texto limpio o lo asignamos manualmente en el HTML si fuera necesario.
+    // Una mejor aproximación es usar (input) para sanitizar todo el valor.
+  }
+
+  // Mejor aproximación: Sanitizar en el evento input
+  public onInputLetras(event: any, field: string) {
+    const input = event.target;
+    const value = input.value;
+    const sanitized = value.replace(/[^a-zA-ZñÑáéíóúÁÉÍÓÚ\s]/g, '');
+    if (value !== sanitized) {
+      input.value = sanitized;
+      this.admin[field] = sanitized;
+    }
+  }
+
+  public onInputNumeros(event: any, field: string) {
+    const input = event.target;
+    const value = input.value;
+    const sanitized = value.replace(/[^0-9]/g, '');
+    if (value !== sanitized) {
+      input.value = sanitized;
+      this.admin[field] = sanitized;
+    }
+  }
+
+  public onInputNoEspacios(event: any, field: string) {
+    const input = event.target;
+    const value = input.value;
+    const sanitized = value.replace(/\s/g, '');
+    if (value !== sanitized) {
+      input.value = sanitized;
+      this.admin[field] = sanitized;
+    }
+  }
+
+  public onInputEmail(event: any) {
+    const input = event.target;
+    const value = input.value;
+    // Permitir solo caracteres válidos para email (letras, números, @, ., -, _)
+    const sanitized = value.replace(/[^a-zA-Z0-9@._-]/g, '');
+    if (value !== sanitized) {
+      input.value = sanitized;
+      this.admin.email = sanitized;
+    }
+  }
+
+  public onInputRFC(event: any) {
+    const input = event.target;
+    const value = input.value;
+    // Permitir solo letras y números y truncar a 13 caracteres
+    const sanitized = value.replace(/[^a-zA-Z0-9]/g, '').substring(0, 13);
+    input.value = sanitized;
+    this.admin.rfc = sanitized;
+  }
+
+  //Función para detectar el cambio de fecha
+  public changeFecha(event: any) {
+    console.log(event);
+    console.log(event.value.toISOString());
+
+    this.admin.fecha_nacimiento = event.value.toISOString().split("T")[0];
+    console.log("Fecha: ", this.admin.fecha_nacimiento);
+
+    // Calcular edad
+    const today = new Date();
+    const birthDate = new Date(event.value);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    this.admin.edad = age;
   }
 }

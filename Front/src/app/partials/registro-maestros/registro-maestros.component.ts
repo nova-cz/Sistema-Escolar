@@ -21,6 +21,7 @@ export class RegistroMaestrosComponent implements OnInit {
   public hide_2: boolean = false;
   public inputType_1: string = 'password';
   public inputType_2: string = 'password';
+  public maxDate: Date;
 
   public maestro: any = {};
   public errors: any = {};
@@ -64,6 +65,10 @@ export class RegistroMaestrosComponent implements OnInit {
     this.maestro.rol = this.rol;
 
     console.log("Datos maestro: ", this.maestro);
+
+    // Inicializar maxDate a 18 años atrás
+    const today = new Date();
+    this.maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
 
     //Checar si se va a editar
     if (this.activatedRoute.snapshot.params['id'] != undefined) {
@@ -179,14 +184,7 @@ export class RegistroMaestrosComponent implements OnInit {
     }
   }
 
-  //Función para detectar el cambio de fecha
-  public changeFecha(event: any) {
-    console.log(event);
-    console.log(event.value.toISOString());
 
-    this.maestro.fecha_nacimiento = event.value.toISOString().split("T")[0];
-    console.log("Fecha: ", this.maestro.fecha_nacimiento);
-  }
 
   // Funciones para los checkbox
   public checkboxChange(event: any) {
@@ -217,4 +215,104 @@ export class RegistroMaestrosComponent implements OnInit {
     }
   }
 
+  public soloLetras(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0);
+    // Permitir solo letras (mayúsculas y minúsculas) y espacio
+    if (
+      !(charCode >= 65 && charCode <= 90) &&  // Letras mayúsculas
+      !(charCode >= 97 && charCode <= 122) && // Letras minúsculas
+      charCode !== 32                         // Espacio
+    ) {
+      event.preventDefault();
+    }
+  }
+
+  public soloNumeros(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0);
+    // Permitir solo números (0-9)
+    if (!(charCode >= 48 && charCode <= 57)) {
+      event.preventDefault();
+    }
+  }
+
+  public noEspacios(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0);
+    // No permitir espacios
+    if (charCode === 32) {
+      event.preventDefault();
+    }
+  }
+
+  public onInputLetras(event: any, field: string) {
+    const input = event.target;
+    const value = input.value;
+    const sanitized = value.replace(/[^a-zA-ZñÑáéíóúÁÉÍÓÚ\s]/g, '');
+    if (value !== sanitized) {
+      input.value = sanitized;
+      this.maestro[field] = sanitized;
+    }
+  }
+
+  public onInputNumeros(event: any, field: string) {
+    const input = event.target;
+    const value = input.value;
+    const sanitized = value.replace(/[^0-9]/g, '');
+    if (value !== sanitized) {
+      input.value = sanitized;
+      this.maestro[field] = sanitized;
+    }
+  }
+
+  public onInputNoEspacios(event: any, field: string) {
+    const input = event.target;
+    const value = input.value;
+    const sanitized = value.replace(/\s/g, '');
+    if (value !== sanitized) {
+      input.value = sanitized;
+      this.maestro[field] = sanitized;
+    }
+  }
+
+  public onInputEmail(event: any) {
+    const input = event.target;
+    const value = input.value;
+    // Permitir solo caracteres válidos para email (letras, números, @, ., -, _)
+    const sanitized = value.replace(/[^a-zA-Z0-9@._-]/g, '');
+    if (value !== sanitized) {
+      input.value = sanitized;
+      this.maestro.email = sanitized;
+    }
+  }
+
+  public onInputRFC(event: any) {
+    const input = event.target;
+    const value = input.value;
+    // Permitir solo letras y números y truncar a 13 caracteres
+    const sanitized = value.replace(/[^a-zA-Z0-9]/g, '').substring(0, 13);
+    input.value = sanitized;
+    this.maestro.rfc = sanitized;
+  }
+
+  public onInputCubiculo(event: any) {
+    const input = event.target;
+    const value = input.value;
+    // Permitir letras, números y espacios
+    const sanitized = value.replace(/[^a-zA-Z0-9ÑñáéíóúÁÉÍÓÚ ]/g, '');
+    if (value !== sanitized) {
+      input.value = sanitized;
+      this.maestro.cubiculo = sanitized;
+    }
+  }
+
+  //Función para detectar el cambio de fecha
+  public changeFecha(event: any) {
+    console.log(event);
+    console.log(event.value.toISOString());
+
+    this.maestro.fecha_nacimiento = event.value.toISOString().split("T")[0];
+    console.log("Fecha: ", this.maestro.fecha_nacimiento);
+
+    // Calcular edad (aunque maestro no tiene campo edad explícito en el form, es buena práctica tenerlo o si se agrega después)
+    // En este caso, solo validamos la fecha
+  }
 }

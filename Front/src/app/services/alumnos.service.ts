@@ -51,10 +51,14 @@ export class AlumnosService {
 
     if (!this.validatorService.required(data["first_name"])) {
       error["first_name"] = this.errorService.required;
+    } else if (!this.validatorService.words(data["first_name"])) {
+      error["first_name"] = "Solo se permiten letras y espacios";
     }
 
     if (!this.validatorService.required(data["last_name"])) {
       error["last_name"] = this.errorService.required;
+    } else if (!this.validatorService.words(data["last_name"])) {
+      error["last_name"] = "Solo se permiten letras y espacios";
     }
 
     if (!this.validatorService.required(data["email"])) {
@@ -68,6 +72,8 @@ export class AlumnosService {
     if (!editar) {
       if (!this.validatorService.required(data["password"])) {
         error["password"] = this.errorService.required;
+      } else if (!this.validatorService.noSpaces(data["password"])) {
+        error["password"] = "La contraseña no puede contener espacios";
       }
 
       if (!this.validatorService.required(data["confirmar_password"])) {
@@ -109,10 +115,18 @@ export class AlumnosService {
 
     if (!this.validatorService.required(data["telefono"])) {
       error["telefono"] = this.errorService.required;
+    } else if (!this.validatorService.min(data["telefono"], 10)) {
+      error["telefono"] = "El teléfono debe tener 10 dígitos";
+      alert("El teléfono debe tener 10 dígitos");
+    } else if (!this.validatorService.max(data["telefono"], 10)) {
+      error["telefono"] = "El teléfono debe tener 10 dígitos";
+      alert("El teléfono debe tener 10 dígitos");
     }
 
     if (!this.validatorService.required(data["ocupacion"])) {
       error["ocupacion"] = this.errorService.required;
+    } else if (!this.validatorService.words(data["ocupacion"])) {
+      error["ocupacion"] = "Solo se permiten letras y espacios";
     }
 
     //Return arreglo

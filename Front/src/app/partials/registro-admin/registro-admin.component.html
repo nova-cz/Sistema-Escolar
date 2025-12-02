@@ -10,31 +10,46 @@
       <!-- Aquí empiezan los campos del formulario -->
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>ID de administrador</mat-label>
-        <input matInput [(ngModel)]="admin.clave_admin" name="id" placeholder="Escribe clave de administrador">
+        <input matInput [(ngModel)]="admin.clave_admin" name="id" placeholder="Escribe clave de administrador"
+          (keypress)="noEspacios($event)" (input)="onInputNoEspacios($event, 'clave_admin')" maxlength="9">
+        <mat-hint align="end">{{admin.clave_admin?.length || 0}}/9</mat-hint>
       </mat-form-field>
       <div *ngIf="errors.clave_admin" class="invalid-feedback">{{ errors.clave_admin }}</div>
 
       <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Fecha de nacimiento</mat-label>
+        <input matInput [matDatepicker]="picker" [max]="maxDate" (dateChange)="changeFecha($event)"
+          placeholder="Elige fecha de nacimiento">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <div *ngIf="errors.fecha_nacimiento" class="invalid-feedback">{{ errors.fecha_nacimiento }}</div>
+
+      <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Nombre</mat-label>
-        <input matInput [(ngModel)]="admin.first_name" placeholder="Escribe nombre" (keypress)="soloLetras($event)">
+        <input matInput [(ngModel)]="admin.first_name" placeholder="Escribe nombre" (keypress)="soloLetras($event)"
+          (input)="onInputLetras($event, 'first_name')">
       </mat-form-field>
       <div *ngIf="errors.first_name" class="invalid-feedback">{{ errors.first_name }}</div>
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Apellidos</mat-label>
-        <input matInput [(ngModel)]="admin.last_name" placeholder="Escribe apellidos" (keypress)="soloLetras($event)">
+        <input matInput [(ngModel)]="admin.last_name" placeholder="Escribe apellidos" (keypress)="soloLetras($event)"
+          (input)="onInputLetras($event, 'last_name')">
       </mat-form-field>
       <div *ngIf="errors.last_name" class="invalid-feedback">{{ errors.last_name }}</div>
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Correo electrónico</mat-label>
-        <input matInput [(ngModel)]="admin.email" placeholder="Escribe correo electrónico" [disabled]="editar">
+        <input matInput [(ngModel)]="admin.email" placeholder="Escribe correo electrónico" [disabled]="editar"
+          (keypress)="noEspacios($event)" (input)="onInputEmail($event)">
       </mat-form-field>
       <div *ngIf="errors.email" class="invalid-feedback">{{ errors.email }}</div>
 
       <mat-form-field class="mat-input" appearance="outline" *ngIf="!editar">
         <mat-label>Contraseña</mat-label>
-        <input matInput [(ngModel)]="admin.password" type="{{ inputType_1 }}" placeholder="Escribe contraseña">
+        <input matInput [(ngModel)]="admin.password" type="{{ inputType_1 }}" placeholder="Escribe contraseña"
+          (keypress)="noEspacios($event)" (input)="onInputNoEspacios($event, 'password')">
         <mat-icon matSuffix class="eye-icon" (click)="showPassword()">{{hide_1 ? 'visibility_off' :
           'visibility'}}</mat-icon>
       </mat-form-field>
@@ -43,7 +58,8 @@
       <mat-form-field class="mat-input" appearance="outline" *ngIf="!editar">
         <mat-label>Confirmar contraseña</mat-label>
         <input matInput [(ngModel)]="admin.confirmar_password" type="{{ inputType_2 }}"
-          placeholder="Confirma la contraseña">
+          placeholder="Confirma la contraseña" (keypress)="noEspacios($event)"
+          (input)="onInputNoEspacios($event, 'confirmar_password')">
         <mat-icon matSuffix class="eye-icon" (click)="showPwdConfirmar()">{{hide_2 ? 'visibility_off' :
           'visibility'}}</mat-icon>
       </mat-form-field>
@@ -51,27 +67,30 @@
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Teléfono</mat-label>
-        <input matInput [(ngModel)]="admin.telefono" mask='(000) 000-0000' placeholder="Escribe teléfono">
+        <input matInput [(ngModel)]="admin.telefono" mask='(000) 000-0000' placeholder="Escribe teléfono"
+          (keypress)="soloNumeros($event)" (input)="onInputNumeros($event, 'telefono')">
       </mat-form-field>
       <div *ngIf="errors.telefono" class="invalid-feedback">{{ errors.telefono }}</div>
 
       <mat-form-field class="mat-input mat-hint-margin" appearance="outline">
         <mat-label>RFC</mat-label>
         <input matInput minlength="12" maxlength="13" [(ngModel)]="admin.rfc" placeholder="Escribe RFC"
-          style="text-transform: uppercase;">
+          style="text-transform: uppercase;" (keypress)="noEspacios($event)" (input)="onInputRFC($event)">
         <mat-hint align="end">{{admin.rfc?.length || 0}}/13</mat-hint>
       </mat-form-field>
       <div *ngIf="errors.rfc" class="invalid-feedback">{{ errors.rfc }}</div>
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Edad</mat-label>
-        <input matInput [(ngModel)]="admin.edad" mask='00' placeholder="Escribe la edad">
+        <input matInput [(ngModel)]="admin.edad" mask='00' placeholder="Escribe la edad"
+          (keypress)="soloNumeros($event)" (input)="onInputNumeros($event, 'edad')">
       </mat-form-field>
       <div *ngIf="errors.edad" class="invalid-feedback">{{ errors.edad }}</div>
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Ocupación</mat-label>
-        <input matInput [(ngModel)]="admin.ocupacion" placeholder="Escribe la ocupación">
+        <input matInput [(ngModel)]="admin.ocupacion" placeholder="Escribe la ocupación" (keypress)="soloLetras($event)"
+          (input)="onInputLetras($event, 'ocupacion')">
       </mat-form-field>
       <div *ngIf="errors.ocupacion" class="invalid-feedback">{{ errors.ocupacion }}</div>
 

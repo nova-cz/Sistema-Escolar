@@ -50,10 +50,14 @@ export class AdministradoresService {
 
     if (!this.validatorService.required(data["first_name"])) {
       error["first_name"] = this.errorService.required;
+    } else if (!this.validatorService.words(data["first_name"])) {
+      error["first_name"] = "Solo se permiten letras y espacios";
     }
 
     if (!this.validatorService.required(data["last_name"])) {
       error["last_name"] = this.errorService.required;
+    } else if (!this.validatorService.words(data["last_name"])) {
+      error["last_name"] = "Solo se permiten letras y espacios";
     }
 
     if (!this.validatorService.required(data["email"])) {
@@ -67,6 +71,8 @@ export class AdministradoresService {
     if (!editar) {
       if (!this.validatorService.required(data["password"])) {
         error["password"] = this.errorService.required;
+      } else if (!this.validatorService.noSpaces(data["password"])) {
+        error["password"] = "La contraseña no puede contener espacios";
       }
 
       if (!this.validatorService.required(data["confirmar_password"])) {
@@ -98,6 +104,8 @@ export class AdministradoresService {
 
     if (!this.validatorService.required(data["ocupacion"])) {
       error["ocupacion"] = this.errorService.required;
+    } else if (!this.validatorService.words(data["ocupacion"])) {
+      error["ocupacion"] = "Solo se permiten letras y espacios";
     }
 
     //Return arreglo
