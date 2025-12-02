@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { FacadeService } from 'src/app/services/facade.service';
 import { EventosService } from 'src/app/services/eventos.service';
+import { EditarUserModalComponent } from 'src/app/modals/editar-user-modal/editar-user-modal.component';
 
 @Component({
   selector: 'app-registro-eventos',
@@ -61,7 +63,8 @@ export class RegistroEventosComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     public facadeService: FacadeService,
-    private eventosService: EventosService
+    private eventosService: EventosService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -279,12 +282,16 @@ export class RegistroEventosComponent implements OnInit {
   }
 
   cargarDatosEvento(datos: any): void {
+    // Convertir las horas del formato del backend al formato del timepicker
+    const horaInicioFormateada = this.convertirHoraParaTimepicker(datos.hora_inicio);
+    const horaFinFormateada = this.convertirHoraParaTimepicker(datos.hora_fin);
+
     this.eventoForm.patchValue({
       nombre: datos.nombre,
       tipo: datos.tipo,
       fecha: datos.fecha,
-      hora_inicio: datos.hora_inicio,
-      hora_fin: datos.hora_fin,
+      hora_inicio: horaInicioFormateada,
+      hora_fin: horaFinFormateada,
       lugar: datos.lugar,
       publico_objetivo: datos.publico_objetivo,
       programa_educativo: datos.programa_educativo,
@@ -292,6 +299,22 @@ export class RegistroEventosComponent implements OnInit {
       descripcion: datos.descripcion,
       cupo_maximo: datos.cupo_maximo
     });
+  }
+
+  // Convertir hora del backend (formato 24h como "16:00:00" o "16:00") al formato del timepicker
+  convertirHoraParaTimepicker(hora: string): string {
+    if (!hora) return '';
+
+    // Extraer horas y minutos (el backend puede enviar "HH:MM:SS" o "HH:MM")
+    const partes = hora.split(':');
+    let horas = parseInt(partes[0], 10);
+    const minutos = partes[1];
+
+    // Convertir a formato 12 horas con AM/PM
+    const periodo = horas >= 12 ? 'PM' : 'AM';
+    horas = horas % 12 || 12; // Convertir 0 a 12 para medianoche, 13-23 a 1-11
+
+    return `${horas}:${minutos} ${periodo}`;
   }
 
   // Convertir formato de 12h a 24h para el backend
@@ -377,27 +400,48 @@ export class RegistroEventosComponent implements OnInit {
       return;
     }
 
-    const datosEvento = {
-      ...this.eventoForm.value,
-      id: this.idEvento,
-      fecha: this.convertirFecha(this.eventoForm.value.fecha),
-      hora_inicio: this.convertirA24Horas(this.eventoForm.value.hora_inicio),
-      hora_fin: this.convertirA24Horas(this.eventoForm.value.hora_fin)
-    };
-    console.log('Evento a actualizar:', datosEvento);
+    // Validación adicional: hora fin > hora inicio
+    if (this.eventoForm.errors?.['horaFinInvalida']) {
+      alert('La hora de fin debe ser posterior a la hora de inicio');
+      return;
+    }
 
-    // Llamada al servicio para actualizar el evento
-    this.eventosService.actualizarEvento(datosEvento).subscribe(
-      (response) => {
-        console.log('Evento actualizado:', response);
-        alert('Evento actualizado exitosamente');
-        // Redirigir al home
-        this.router.navigate(['/home']);
+    // Mostrar modal de confirmación
+    const dialogRef = this.dialog.open(EditarUserModalComponent, {
+      data: {
+        tipo: 'evento',
+        nombre: this.eventoForm.value.nombre
       },
-      (error) => {
-        console.error('Error al actualizar evento:', error);
-        alert('Error al actualizar el evento. Por favor, intenta de nuevo.');
+      height: '288px',
+      width: '328px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.isEdit) {
+        // Si el usuario confirma, proceder con la actualización
+        const datosEvento = {
+          ...this.eventoForm.value,
+          id: this.idEvento,
+          fecha: this.convertirFecha(this.eventoForm.value.fecha),
+          hora_inicio: this.convertirA24Horas(this.eventoForm.value.hora_inicio),
+          hora_fin: this.convertirA24Horas(this.eventoForm.value.hora_fin)
+        };
+        console.log('Evento a actualizar:', datosEvento);
+
+        // Llamada al servicio para actualizar el evento
+        this.eventosService.actualizarEvento(datosEvento).subscribe(
+          (response) => {
+            console.log('Evento actualizado:', response);
+            alert('Evento actualizado exitosamente');
+            // Redirigir a la lista de eventos
+            this.router.navigate(['/eventos-academicos']);
+          },
+          (error) => {
+            console.error('Error al actualizar evento:', error);
+            alert('Error al actualizar el evento. Por favor, intenta de nuevo.');
+          }
+        );
       }
-    );
+    });
   }
 }

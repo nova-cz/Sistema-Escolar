@@ -6,6 +6,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { AdministradoresService } from 'src/app/services/administradores.service';
 import { MaestrosService } from 'src/app/services/maestros.service';
 import { AlumnosService } from 'src/app/services/alumnos.service';
+import { EventosService } from 'src/app/services/eventos.service';
 
 @Component({
   selector: 'app-registro-usuarios-screen',
@@ -35,7 +36,8 @@ export class RegistroUsuariosScreenComponent implements OnInit {
     public facadeService: FacadeService,
     private administradoresService: AdministradoresService,
     private maestrosService: MaestrosService,
-    private alumnosService: AlumnosService
+    private alumnosService: AlumnosService,
+    private eventosService: EventosService
   ) { }
 
   ngOnInit(): void {
@@ -145,6 +147,18 @@ export class RegistroUsuariosScreenComponent implements OnInit {
         }, (error) => {
           console.log("Error: ", error);
           alert("No se pudo obtener el alumno seleccionado");
+        }
+      );
+    } else if (this.rol == "evento") {
+      this.eventosService.obtenerEventoPorID(this.idUser).subscribe(
+        (response) => {
+          this.user = response;
+          console.log("Evento obtenido: ", this.user);
+          this.user.tipo_usuario = this.rol;
+          this.isEvento = true;
+        }, (error) => {
+          console.log("Error: ", error);
+          alert("No se pudo obtener el evento seleccionado");
         }
       );
     }

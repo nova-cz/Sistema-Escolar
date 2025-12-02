@@ -165,10 +165,8 @@ export class EventosScreenComponent implements OnInit {
   }
 
   public editarEvento(evento: any) {
-    // Navegar al registro-eventos con los datos del evento
-    this.router.navigate(["/registro-eventos"], {
-      state: { evento: evento }
-    });
+    // Navegar al registro-usuarios con el ID del evento en la URL
+    this.router.navigate(['/registro-usuarios/evento/' + evento.id]);
   }
 
   public eliminarEvento(evento: any) {
