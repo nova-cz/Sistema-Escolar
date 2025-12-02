@@ -77,7 +77,25 @@ export class EventosScreenComponent implements OnInit {
   public obtenerEventos() {
     this.eventosService.obtenerListaEventos().subscribe(
       (response) => {
-        this.lista_eventos = response;
+        // Filtrar eventos según el rol del usuario
+        let eventosFiltrados = response;
+
+        if (this.rol === 'maestro') {
+          // Maestros solo ven eventos para profesores y público general
+          eventosFiltrados = response.filter((evento: any) =>
+            evento.publico_objetivo === 'profesores' ||
+            evento.publico_objetivo === 'publico_general'
+          );
+        } else if (this.rol === 'alumno') {
+          // Alumnos solo ven eventos para estudiantes y público general
+          eventosFiltrados = response.filter((evento: any) =>
+            evento.publico_objetivo === 'estudiantes' ||
+            evento.publico_objetivo === 'publico_general'
+          );
+        }
+        // Administradores ven todos los eventos (sin filtro)
+
+        this.lista_eventos = eventosFiltrados;
 
         if (this.lista_eventos.length > 0) {
           // Formatear datos para la tabla

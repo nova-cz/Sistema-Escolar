@@ -89,7 +89,9 @@ export class SidebarComponent implements OnInit {
   }
 
   canSeeStudentItems(): boolean {
-    return this.isAdmin() || this.isTeacher() || this.isStudent();
+    const result = this.isAdmin() || this.isTeacher() || this.isStudent();
+    console.log('CanSeeStudentItems:', result, 'Role:', this.userRole);
+    return result;
   }
 
   canSeeHomeItem(): boolean {

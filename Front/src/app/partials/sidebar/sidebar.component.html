@@ -10,13 +10,9 @@
         </li>
 
         <!-- Registro Dropdown - CRÍTICO: NO usar routerLink aquí -->
-        <li *ngIf="canSeeRegisterItem()" 
-            class="registro-menu-item" 
-            [class.open]="registroMenuOpen">
+        <li *ngIf="canSeeRegisterItem()" class="registro-menu-item" [class.open]="registroMenuOpen">
           <!-- Wrapper que captura el click SIN navegar -->
-          <div class="menu-item-wrapper" 
-               (click)="toggleRegistroMenu($event)"
-               (mousedown)="$event.preventDefault()">
+          <div class="menu-item-wrapper" (click)="toggleRegistroMenu($event)" (mousedown)="$event.preventDefault()">
             <mat-icon>person_add</mat-icon>
             <span>Registro</span>
             <mat-icon class="dropdown-icon">{{registroMenuOpen ? 'expand_less' : 'expand_more'}}</mat-icon>
@@ -31,7 +27,7 @@
                 <span>Alumno</span>
               </a>
             </li>
-            
+
             <!-- Maestro -->
             <li *ngIf="canRegisterTeachers()">
               <a (click)="navigateToRegistro('maestro', $event)" class="dropdown-item">
@@ -39,7 +35,7 @@
                 <span>Maestro</span>
               </a>
             </li>
-            
+
             <!-- Administrador -->
             <li *ngIf="canRegisterAdmins()">
               <a (click)="navigateToRegistro('administrador', $event)" class="dropdown-item">
@@ -47,7 +43,7 @@
                 <span>Administrador</span>
               </a>
             </li>
-            
+
             <!-- Evento Académico -->
             <li *ngIf="canRegisterEvents()">
               <a (click)="navigateToRegistro('evento', $event)" class="dropdown-item">
@@ -82,9 +78,10 @@
           <span>Gráficas</span>
         </li>
 
-        <!-- Eventos Académicos -->
-        <li *ngIf="canSeeTeacherItems()" routerLink="/eventos-academicos" routerLinkActive="active"
-          (click)="closeSidebar()">
+
+        <!-- Eventos Académicos - Visible para Admin, Maestro y Alumno -->
+        <li *ngIf="userRole === 'administrador' || userRole === 'maestro' || userRole === 'alumno'"
+          routerLink="/eventos-academicos" routerLinkActive="active" (click)="closeSidebar()">
           <mat-icon>event</mat-icon>
           <span>Eventos Académicos</span>
         </li>
@@ -96,7 +93,7 @@
       </button>
     </nav>
   </mat-sidenav>
-  
+
   <mat-sidenav-content>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
