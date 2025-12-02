@@ -191,7 +191,8 @@ export class EventosScreenComponent implements OnInit {
     const dialogRef = this.dialog.open(EliminarUserModalComponent, {
       data: {
         id: evento.id,
-        nombre: evento.nombre
+        nombre: evento.nombre,
+        rol: 'evento'
       },
       height: '288px',
       width: '328px',

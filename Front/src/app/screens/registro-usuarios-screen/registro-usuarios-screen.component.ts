@@ -28,6 +28,7 @@ export class RegistroUsuariosScreenComponent implements OnInit {
   public isEvento: boolean = false;
 
   public tipo_user: string = "";
+  public hideSelector: boolean = false;
 
   constructor(
     private location: Location,
@@ -48,6 +49,7 @@ export class RegistroUsuariosScreenComponent implements OnInit {
       if (params['tipo']) {
         this.user.tipo_usuario = params['tipo'];
         this.radioChange({ value: params['tipo'] } as MatRadioChange);
+        this.hideSelector = true;
       }
     });
 
@@ -60,6 +62,7 @@ export class RegistroUsuariosScreenComponent implements OnInit {
     //El if valida si existe un parámetro ID en la URL
     if (this.activatedRoute.snapshot.params['id'] != undefined) {
       this.editar = true;
+      this.hideSelector = true;
       //Asignamos a nuestra variable global el valor del ID que viene por la URL
       this.idUser = this.activatedRoute.snapshot.params['id'];
       console.log("ID User: ", this.idUser);

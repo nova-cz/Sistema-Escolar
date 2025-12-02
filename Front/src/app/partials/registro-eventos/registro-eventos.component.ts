@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { FacadeService } from 'src/app/services/facade.service';
 import { EventosService } from 'src/app/services/eventos.service';
@@ -64,7 +65,8 @@ export class RegistroEventosComponent implements OnInit {
     private router: Router,
     public facadeService: FacadeService,
     private eventosService: EventosService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
@@ -379,8 +381,8 @@ export class RegistroEventosComponent implements OnInit {
         alert('Evento registrado exitosamente');
         this.eventoForm.reset();
         this.editar = false;
-        // Redirigir al home
-        this.router.navigate(['/home']);
+        // Redirigir a la lista de eventos
+        this.router.navigate(['/eventos-academicos']);
       },
       (error) => {
         console.error('Error al registrar evento:', error);
@@ -443,5 +445,9 @@ export class RegistroEventosComponent implements OnInit {
         );
       }
     });
+  }
+
+  public regresar() {
+    this.location.back();
   }
 }

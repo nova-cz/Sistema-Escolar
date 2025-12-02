@@ -1,180 +1,183 @@
-<mat-card class="reg-card">
-    <mat-card-header>
-        <mat-card-title>
-            <ng-container *ngIf="!editar; else editMode">Registro de Evento Académico</ng-container>
-            <ng-template #editMode>Edición de Evento Académico</ng-template>
-        </mat-card-title>
-        <mat-card-subtitle>Completa la información del evento</mat-card-subtitle>
-    </mat-card-header>
+<div class="wrapper">
+    <div class="section-registro">
+        <div class="body-registro">
+            <div class="row mt-3 mb-3">
+                <div class="form-group col-12">
+                    <label class="title-user" *ngIf="!editar">Registro de Evento Académico</label>
+                    <label class="title-user" *ngIf="editar">Edición de Evento Académico</label>
+                </div>
+            </div>
 
-    <mat-card-content>
-        <form [formGroup]="eventoForm" class="form-section">
+            <form [formGroup]="eventoForm" class="form-section" style="width: 100%;">
+                <!-- Nombre del Evento -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Nombre del Evento *</mat-label>
+                    <input matInput formControlName="nombre" placeholder="Ej: Conferencia de Tecnología 2024"
+                        (input)="sanitizeNombre($event)" (paste)="sanitizeNombre($event)">
+                    <mat-icon matPrefix>event</mat-icon>
+                    <mat-error *ngIf="f['nombre'].invalid && f['nombre'].touched">
+                        {{ getErrorMessage('nombre') }}
+                    </mat-error>
+                    <mat-hint>5-100 caracteres</mat-hint>
+                </mat-form-field>
 
-            <!-- Nombre del Evento -->
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Nombre del Evento *</mat-label>
-                <input matInput formControlName="nombre" placeholder="Ej: Conferencia de Tecnología 2024"
-                    (input)="sanitizeNombre($event)" (paste)="sanitizeNombre($event)">
-                <mat-icon matPrefix>event</mat-icon>
-                <mat-error *ngIf="f['nombre'].invalid && f['nombre'].touched">
-                    {{ getErrorMessage('nombre') }}
-                </mat-error>
-                <mat-hint>5-100 caracteres</mat-hint>
-            </mat-form-field>
-
-            <!-- Tipo de Evento -->
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Tipo de Evento *</mat-label>
-                <mat-select formControlName="tipo">
-                    <mat-option *ngFor="let tipo of tiposEvento" [value]="tipo.value">
-                        {{ tipo.label }}
-                    </mat-option>
-                </mat-select>
-                <mat-icon matPrefix>category</mat-icon>
-                <mat-error *ngIf="f['tipo'].invalid && f['tipo'].touched">
-                    {{ getErrorMessage('tipo') }}
-                </mat-error>
-            </mat-form-field>
-
-            <!-- Fecha de Realización -->
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Fecha de Realización *</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="fecha" placeholder="dd/mm/aaaa"
-                    [min]="minDate">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-                <mat-error *ngIf="f['fecha'].invalid && f['fecha'].touched">
-                    {{ getErrorMessage('fecha') }}
-                </mat-error>
-                <mat-hint>Debe ser una fecha futura</mat-hint>
-            </mat-form-field>
-
-            <!-- Horario -->
-            <div class="horario-row">
-                <!-- Hora de Inicio -->
-                <mat-form-field appearance="outline" class="half-width">
-                    <mat-label>Hora de Inicio *</mat-label>
-                    <input matInput formControlName="hora_inicio" placeholder="HH:MM" [ngxTimepicker]="pickerInicio"
-                        readonly>
-                    <mat-icon matPrefix>schedule</mat-icon>
-                    <ngx-material-timepicker #pickerInicio [theme]="customTheme"
-                        [format]="24"></ngx-material-timepicker>
-                    <mat-error *ngIf="f['hora_inicio'].invalid && f['hora_inicio'].touched">
-                        {{ getErrorMessage('hora_inicio') }}
+                <!-- Tipo de Evento -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Tipo de Evento *</mat-label>
+                    <mat-select formControlName="tipo">
+                        <mat-option *ngFor="let tipo of tiposEvento" [value]="tipo.value">
+                            {{ tipo.label }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon matPrefix>category</mat-icon>
+                    <mat-error *ngIf="f['tipo'].invalid && f['tipo'].touched">
+                        {{ getErrorMessage('tipo') }}
                     </mat-error>
                 </mat-form-field>
 
-                <!-- Hora de Fin -->
-                <mat-form-field appearance="outline" class="half-width">
-                    <mat-label>Hora de Fin *</mat-label>
-                    <input matInput formControlName="hora_fin" placeholder="HH:MM" [ngxTimepicker]="pickerFin" readonly>
-                    <mat-icon matPrefix>schedule</mat-icon>
-                    <ngx-material-timepicker #pickerFin [theme]="customTheme" [format]="24"></ngx-material-timepicker>
-                    <mat-error *ngIf="f['hora_fin'].invalid && f['hora_fin'].touched">
-                        {{ getErrorMessage('hora_fin') }}
+                <!-- Fecha de Realización -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Fecha de Realización *</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="fecha" placeholder="dd/mm/aaaa"
+                        [min]="minDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="f['fecha'].invalid && f['fecha'].touched">
+                        {{ getErrorMessage('fecha') }}
+                    </mat-error>
+                    <mat-hint>Debe ser una fecha futura</mat-hint>
+                </mat-form-field>
+
+                <!-- Horario -->
+                <div class="horario-row"
+                    style="display: flex; justify-content: space-between; width: 90%; margin-left: 5%;">
+                    <!-- Hora de Inicio -->
+                    <mat-form-field appearance="outline" style="width: 48%!important; margin-left: 0;">
+                        <mat-label>Hora de Inicio *</mat-label>
+                        <input matInput formControlName="hora_inicio" placeholder="HH:MM" [ngxTimepicker]="pickerInicio"
+                            readonly>
+                        <mat-icon matPrefix>schedule</mat-icon>
+                        <ngx-material-timepicker #pickerInicio [theme]="customTheme"
+                            [format]="24"></ngx-material-timepicker>
+                        <mat-error *ngIf="f['hora_inicio'].invalid && f['hora_inicio'].touched">
+                            {{ getErrorMessage('hora_inicio') }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Hora de Fin -->
+                    <mat-form-field appearance="outline" style="width: 48%!important; margin-left: 0;">
+                        <mat-label>Hora de Fin *</mat-label>
+                        <input matInput formControlName="hora_fin" placeholder="HH:MM" [ngxTimepicker]="pickerFin"
+                            readonly>
+                        <mat-icon matPrefix>schedule</mat-icon>
+                        <ngx-material-timepicker #pickerFin [theme]="customTheme"
+                            [format]="24"></ngx-material-timepicker>
+                        <mat-error *ngIf="f['hora_fin'].invalid && f['hora_fin'].touched">
+                            {{ getErrorMessage('hora_fin') }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Error de validación cruzada -->
+                <div *ngIf="eventoForm.errors?.['horaFinInvalida'] && (f['hora_inicio'].touched || f['hora_fin'].touched)"
+                    class="cross-validation-error"
+                    style="width: 90%; margin-left: 5%; color: red; margin-bottom: 1rem;">
+                    <mat-icon style="vertical-align: middle;">error</mat-icon>
+                    <span>La hora de fin debe ser posterior a la hora de inicio</span>
+                </div>
+
+                <!-- Lugar -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Lugar *</mat-label>
+                    <input matInput formControlName="lugar" placeholder="Ej: Auditorio Principal"
+                        (input)="sanitizeLugar($event)" (paste)="sanitizeLugar($event)">
+                    <mat-icon matPrefix>place</mat-icon>
+                    <mat-error *ngIf="f['lugar'].invalid && f['lugar'].touched">
+                        {{ getErrorMessage('lugar') }}
+                    </mat-error>
+                    <mat-hint>Máximo 200 caracteres</mat-hint>
+                </mat-form-field>
+
+                <!-- Público Objetivo -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Público Objetivo *</mat-label>
+                    <mat-select formControlName="publico_objetivo">
+                        <mat-option *ngFor="let publico of publicosObjetivo" [value]="publico.value">
+                            {{ publico.label }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon matPrefix>group</mat-icon>
+                    <mat-error *ngIf="f['publico_objetivo'].invalid && f['publico_objetivo'].touched">
+                        {{ getErrorMessage('publico_objetivo') }}
                     </mat-error>
                 </mat-form-field>
+
+                <!-- Programa Educativo (condicional) -->
+                <mat-form-field appearance="outline" class="full-width" *ngIf="mostrarProgramaEducativo()">
+                    <mat-label>Programa Educativo *</mat-label>
+                    <mat-select formControlName="programa_educativo">
+                        <mat-option *ngFor="let programa of programasEducativos" [value]="programa.value">
+                            {{ programa.label }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon matPrefix>school</mat-icon>
+                    <mat-error *ngIf="f['programa_educativo'].invalid && f['programa_educativo'].touched">
+                        {{ getErrorMessage('programa_educativo') }}
+                    </mat-error>
+                    <mat-hint>Este campo aparece porque seleccionaste "Estudiantes"</mat-hint>
+                </mat-form-field>
+
+                <!-- Responsable del Evento -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Responsable del Evento</mat-label>
+                    <mat-select formControlName="responsable_id">
+                        <mat-option [value]="null">-- Sin asignar --</mat-option>
+                        <mat-option *ngFor="let responsable of responsables" [value]="responsable.id">
+                            {{ responsable.first_name }} {{ responsable.last_name }} ({{ responsable.rol }})
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon matPrefix>person</mat-icon>
+                    <mat-error *ngIf="f['responsable_id'].invalid && f['responsable_id'].touched">
+                        {{ getErrorMessage('responsable_id') }}
+                    </mat-error>
+                    <mat-hint>Selecciona un maestro o administrador como responsable</mat-hint>
+                </mat-form-field>
+
+                <!-- Descripción Breve -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Descripción Breve *</mat-label>
+                    <textarea matInput formControlName="descripcion"
+                        placeholder="Describe brevemente el evento y su objetivo" rows="4"
+                        (input)="sanitizeDescripcion($event)" (paste)="sanitizeDescripcion($event)"></textarea>
+                    <mat-icon matPrefix>description</mat-icon>
+                    <mat-error *ngIf="f['descripcion'].invalid && f['descripcion'].touched">
+                        {{ getErrorMessage('descripcion') }}
+                    </mat-error>
+                    <mat-hint align="end">{{ f['descripcion'].value?.length || 0 }} / 300 caracteres</mat-hint>
+                </mat-form-field>
+
+                <!-- Cupo Máximo de Asistentes -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Cupo Máximo de Asistentes *</mat-label>
+                    <input matInput type="number" formControlName="cupo_maximo" placeholder="Ej: 100" min="1" max="999"
+                        maxlength="3" (input)="sanitizeCupo($event)" (paste)="sanitizeCupo($event)">
+                    <mat-icon matPrefix>people_outline</mat-icon>
+                    <mat-error *ngIf="f['cupo_maximo'].invalid && f['cupo_maximo'].touched">
+                        {{ getErrorMessage('cupo_maximo') }}
+                    </mat-error>
+                    <mat-hint>Entre 1 y 999 personas</mat-hint>
+                </mat-form-field>
+            </form>
+
+            <div class="section-buttons">
+                <button class="btn btn-danger" (click)="regresar()">Cancelar</button>
+                <button class="btn btn-primary" *ngIf="!editar" (click)="registrar()" [disabled]="eventoForm.invalid">
+                    Registrar
+                </button>
+                <button class="btn btn-primary" *ngIf="editar" (click)="actualizar()" [disabled]="eventoForm.invalid">
+                    Actualizar
+                </button>
             </div>
-
-            <!-- Error de validación cruzada -->
-            <div *ngIf="eventoForm.errors?.['horaFinInvalida'] && (f['hora_inicio'].touched || f['hora_fin'].touched)"
-                class="cross-validation-error">
-                <mat-icon>error</mat-icon>
-                <span>La hora de fin debe ser posterior a la hora de inicio</span>
-            </div>
-
-            <!-- Lugar -->
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Lugar *</mat-label>
-                <input matInput formControlName="lugar" placeholder="Ej: Auditorio Principal"
-                    (input)="sanitizeLugar($event)" (paste)="sanitizeLugar($event)">
-                <mat-icon matPrefix>place</mat-icon>
-                <mat-error *ngIf="f['lugar'].invalid && f['lugar'].touched">
-                    {{ getErrorMessage('lugar') }}
-                </mat-error>
-                <mat-hint>Máximo 200 caracteres</mat-hint>
-            </mat-form-field>
-
-            <!-- Público Objetivo -->
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Público Objetivo *</mat-label>
-                <mat-select formControlName="publico_objetivo">
-                    <mat-option *ngFor="let publico of publicosObjetivo" [value]="publico.value">
-                        {{ publico.label }}
-                    </mat-option>
-                </mat-select>
-                <mat-icon matPrefix>group</mat-icon>
-                <mat-error *ngIf="f['publico_objetivo'].invalid && f['publico_objetivo'].touched">
-                    {{ getErrorMessage('publico_objetivo') }}
-                </mat-error>
-            </mat-form-field>
-
-            <!-- Programa Educativo (condicional) -->
-            <mat-form-field appearance="outline" class="full-width" *ngIf="mostrarProgramaEducativo()">
-                <mat-label>Programa Educativo *</mat-label>
-                <mat-select formControlName="programa_educativo">
-                    <mat-option *ngFor="let programa of programasEducativos" [value]="programa.value">
-                        {{ programa.label }}
-                    </mat-option>
-                </mat-select>
-                <mat-icon matPrefix>school</mat-icon>
-                <mat-error *ngIf="f['programa_educativo'].invalid && f['programa_educativo'].touched">
-                    {{ getErrorMessage('programa_educativo') }}
-                </mat-error>
-                <mat-hint>Este campo aparece porque seleccionaste "Estudiantes"</mat-hint>
-            </mat-form-field>
-
-            <!-- Responsable del Evento -->
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Responsable del Evento</mat-label>
-                <mat-select formControlName="responsable_id">
-                    <mat-option [value]="null">-- Sin asignar --</mat-option>
-                    <mat-option *ngFor="let responsable of responsables" [value]="responsable.id">
-                        {{ responsable.first_name }} {{ responsable.last_name }} ({{ responsable.rol }})
-                    </mat-option>
-                </mat-select>
-                <mat-icon matPrefix>person</mat-icon>
-                <mat-error *ngIf="f['responsable_id'].invalid && f['responsable_id'].touched">
-                    {{ getErrorMessage('responsable_id') }}
-                </mat-error>
-                <mat-hint>Selecciona un maestro o administrador como responsable</mat-hint>
-            </mat-form-field>
-
-            <!-- Descripción Breve -->
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Descripción Breve *</mat-label>
-                <textarea matInput formControlName="descripcion"
-                    placeholder="Describe brevemente el evento y su objetivo" rows="4"
-                    (input)="sanitizeDescripcion($event)" (paste)="sanitizeDescripcion($event)"></textarea>
-                <mat-icon matPrefix>description</mat-icon>
-                <mat-error *ngIf="f['descripcion'].invalid && f['descripcion'].touched">
-                    {{ getErrorMessage('descripcion') }}
-                </mat-error>
-                <mat-hint align="end">{{ f['descripcion'].value?.length || 0 }} / 300 caracteres</mat-hint>
-            </mat-form-field>
-
-            <!-- Cupo Máximo de Asistentes -->
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Cupo Máximo de Asistentes *</mat-label>
-                <input matInput type="number" formControlName="cupo_maximo" placeholder="Ej: 100" min="1" max="999"
-                    maxlength="3" (input)="sanitizeCupo($event)" (paste)="sanitizeCupo($event)">
-                <mat-icon matPrefix>people_outline</mat-icon>
-                <mat-error *ngIf="f['cupo_maximo'].invalid && f['cupo_maximo'].touched">
-                    {{ getErrorMessage('cupo_maximo') }}
-                </mat-error>
-                <mat-hint>Entre 1 y 999 personas</mat-hint>
-            </mat-form-field>
-        </form>
-    </mat-card-content>
-
-    <mat-card-actions align="end">
-        <button class="btn-registrar" *ngIf="!editar" (click)="registrar()" [disabled]="eventoForm.invalid">
-            <mat-icon>save</mat-icon>
-            Registrar Evento
-        </button>
-        <button class="btn-registrar" *ngIf="editar" (click)="actualizar()" [disabled]="eventoForm.invalid">
-            <mat-icon>update</mat-icon>
-            Actualizar Evento
-        </button>
-    </mat-card-actions>
-</mat-card>
+        </div>
+    </div>
+</div>

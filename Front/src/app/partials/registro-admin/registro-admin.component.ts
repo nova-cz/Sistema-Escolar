@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FacadeService } from 'src/app/services/facade.service';
 import { Location } from '@angular/common';
 import { AdministradoresService } from 'src/app/services/administradores.service';
+import { MatDialog } from '@angular/material/dialog';
+import { EditarUserModalComponent } from 'src/app/modals/editar-user-modal/editar-user-modal.component';
 
 @Component({
   selector: 'app-registro-admin',
@@ -14,9 +16,9 @@ export class RegistroAdminComponent implements OnInit {
   @Input() rol: string = "";
   @Input() datos_user: any = {};
 
-  public admin:any = {};
-  public errors:any = {};
-  public editar:boolean = false;
+  public admin: any = {};
+  public errors: any = {};
+  public editar: boolean = false;
   public token: string = "";
   public idUser: Number = 0;
 
@@ -31,19 +33,20 @@ export class RegistroAdminComponent implements OnInit {
     public activatedRoute: ActivatedRoute,
     private administradoresService: AdministradoresService,
     private facadeService: FacadeService,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
     //El primer if valida si existe un parámetro en la URL
-    if(this.activatedRoute.snapshot.params['id'] != undefined){
+    if (this.activatedRoute.snapshot.params['id'] != undefined) {
       this.editar = true;
       //Asignamos a nuestra variable global el valor del ID que viene por la URL
       this.idUser = this.activatedRoute.snapshot.params['id'];
       console.log("ID User: ", this.idUser);
       //Al iniciar la vista asignamos los datos del user
       this.admin = this.datos_user;
-    }else{
+    } else {
       // Va a registrar un nuevo administrador
       this.admin = this.administradoresService.esquemaAdmin();
       this.admin.rol = this.rol;
@@ -55,51 +58,50 @@ export class RegistroAdminComponent implements OnInit {
   }
 
   //Funciones para password
-  public showPassword()
-  {
-    if(this.inputType_1 == 'password'){
+  public showPassword() {
+    if (this.inputType_1 == 'password') {
       this.inputType_1 = 'text';
       this.hide_1 = true;
     }
-    else{
+    else {
       this.inputType_1 = 'password';
       this.hide_1 = false;
     }
   }
 
-  public showPwdConfirmar()
-  {
-    if(this.inputType_2 == 'password'){
+  public showPwdConfirmar() {
+    if (this.inputType_2 == 'password') {
       this.inputType_2 = 'text';
       this.hide_2 = true;
     }
-    else{
+    else {
       this.inputType_2 = 'password';
       this.hide_2 = false;
     }
   }
 
-  public regresar(){
+  public regresar() {
     this.location.back();
   }
 
-  public registrar(){
+  public registrar() {
     this.errors = {};
     this.errors = this.administradoresService.validarAdmin(this.admin, this.editar);
-    if(Object.keys(this.errors).length > 0){
+    if (Object.keys(this.errors).length > 0) {
       return false;
     }
     //Validar la contraseña
-    if(this.admin.password == this.admin.confirmar_password){
+    if (this.admin.password == this.admin.confirmar_password) {
       // Ejecutamos el servicio de registro
       this.administradoresService.registrarAdmin(this.admin).subscribe(
         (response) => {
           // Redirigir o mostrar mensaje de éxito
           alert("Administrador registrado exitosamente");
           console.log("Administrador registrado: ", response);
-          if(this.token && this.token !== ""){
+          const token = this.facadeService.getSessionToken();
+          if (token) {
             this.router.navigate(["administrador"]);
-          }else{
+          } else {
             this.router.navigate(["/"]);
           }
         },
@@ -109,35 +111,48 @@ export class RegistroAdminComponent implements OnInit {
           console.error("Error al registrar administrador: ", error);
         }
       );
-    }else{
+    } else {
       alert("Las contraseñas no coinciden");
-      this.admin.password="";
-      this.admin.confirmar_password="";
+      this.admin.password = "";
+      this.admin.confirmar_password = "";
     }
   }
 
-  public actualizar(){
+  public actualizar() {
     // Validación de los datos
     this.errors = {};
     this.errors = this.administradoresService.validarAdmin(this.admin, this.editar);
-    if(Object.keys(this.errors).length > 0){
+    if (Object.keys(this.errors).length > 0) {
       return false;
     }
 
-    // Ejecutar el servicio de actualización
-    this.administradoresService.actualizarAdmin(this.admin).subscribe(
-      (response) => {
-        // Redirigir o mostrar mensaje de éxito
-        alert("Administrador actualizado exitosamente");
-        console.log("Administrador actualizado: ", response);
-        this.router.navigate(["administrador"]);
+    const dialogRef = this.dialog.open(EditarUserModalComponent, {
+      data: {
+        tipo: 'administrador',
+        nombre: this.admin.first_name + ' ' + this.admin.last_name
       },
-      (error) => {
-        // Manejar errores de la API
-        alert("Error al actualizar administrador");
-        console.error("Error al actualizar administrador: ", error);
+      height: '288px',
+      width: '328px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.isEdit) {
+        // Ejecutar el servicio de actualización
+        this.administradoresService.actualizarAdmin(this.admin).subscribe(
+          (response) => {
+            // Redirigir o mostrar mensaje de éxito
+            alert("Administrador actualizado exitosamente");
+            console.log("Administrador actualizado: ", response);
+            this.router.navigate(["administrador"]);
+          },
+          (error) => {
+            // Manejar errores de la API
+            alert("Error al actualizar administrador");
+            console.error("Error al actualizar administrador: ", error);
+          }
+        );
       }
-    );
+    });
   }
 
   // Función para los campos solo de datos alfabeticos

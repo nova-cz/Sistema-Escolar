@@ -202,3 +202,20 @@ class ResponsablesView(generics.ListAPIView):
         
         return Response(lista, 200)
 
+class TotalEventos(generics.GenericAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def get(self, request, *args, **kwargs):
+        # Contar eventos por público objetivo
+        estudiantes = EventoAcademico.objects.filter(publico_objetivo='estudiantes').count()
+        profesores = EventoAcademico.objects.filter(publico_objetivo='profesores').count()
+        publico_general = EventoAcademico.objects.filter(publico_objetivo='publico_general').count()
+        
+        return Response(
+            {
+                "estudiantes": estudiantes,
+                "profesores": profesores,
+                "publico_general": publico_general
+            },
+            status=200
+        )

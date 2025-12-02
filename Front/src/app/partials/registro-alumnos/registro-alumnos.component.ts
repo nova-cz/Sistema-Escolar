@@ -1,7 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { FacadeService } from 'src/app/services/facade.service';
 import { AlumnosService } from 'src/app/services/alumnos.service';
+import { MatDialog } from '@angular/material/dialog';
+import { EditarUserModalComponent } from 'src/app/modals/editar-user-modal/editar-user-modal.component';
 
 @Component({
   selector: 'app-registro-alumnos',
@@ -29,7 +32,9 @@ export class RegistroAlumnosComponent implements OnInit {
     private router: Router,
     private location: Location,
     public activatedRoute: ActivatedRoute,
-    private alumnosService: AlumnosService
+    private alumnosService: AlumnosService,
+    private facadeService: FacadeService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -78,7 +83,8 @@ export class RegistroAlumnosComponent implements OnInit {
           // Redirigir o mostrar mensaje de éxito
           alert("Alumno registrado exitosamente");
           console.log("Alumno registrado: ", response);
-          if (this.token && this.token !== "") {
+          const token = this.facadeService.getSessionToken();
+          if (token) {
             this.router.navigate(["alumnos"]);
           } else {
             this.router.navigate(["/"]);
@@ -105,15 +111,28 @@ export class RegistroAlumnosComponent implements OnInit {
       return false;
     }
 
-    this.alumnosService.actualizarAlumno(this.alumno).subscribe(
-      (response) => {
-        alert("Alumno actualizado correctamente");
-        console.log("Alumno actualizado: ", response);
-        this.router.navigate(["alumnos"]);
-      }, (error) => {
-        alert("No se pudo actualizar el alumno");
+    const dialogRef = this.dialog.open(EditarUserModalComponent, {
+      data: {
+        tipo: 'alumno',
+        nombre: this.alumno.first_name + ' ' + this.alumno.last_name
+      },
+      height: '288px',
+      width: '328px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.isEdit) {
+        this.alumnosService.actualizarAlumno(this.alumno).subscribe(
+          (response) => {
+            alert("Alumno actualizado correctamente");
+            console.log("Alumno actualizado: ", response);
+            this.router.navigate(["alumnos"]);
+          }, (error) => {
+            alert("No se pudo actualizar el alumno");
+          }
+        );
       }
-    );
+    });
   }
 
   //Funciones para password

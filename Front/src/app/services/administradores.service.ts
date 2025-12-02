@@ -145,6 +145,19 @@ export class AdministradoresService {
     return this.http.get<any>(`${environment.url_api}/total-usuarios/`, { headers });
   }
 
+  // Servicio para obtener el total de eventos por público objetivo
+  public getTotalEventos(): Observable<any> {
+    const token = this.facadeService.getSessionToken();
+    let headers: HttpHeaders;
+    if (token) {
+      headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+    } else {
+      headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+      console.log("No se encontró el token del usuario");
+    }
+    return this.http.get<any>(`${environment.url_api}/total-eventos/`, { headers });
+  }
+
   // Petición para obtener un administrador por su ID
   public obtenerAdminPorID(idAdmin: number): Observable<any> {
     const token = this.facadeService.getSessionToken();

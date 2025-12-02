@@ -3,6 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FacadeService } from 'src/app/services/facade.service';
 import { Location } from '@angular/common';
 import { MaestrosService } from 'src/app/services/maestros.service';
+import { MatDialog } from '@angular/material/dialog';
+import { EditarUserModalComponent } from 'src/app/modals/editar-user-modal/editar-user-modal.component';
 
 @Component({
   selector: 'app-registro-maestros',
@@ -52,7 +54,8 @@ export class RegistroMaestrosComponent implements OnInit {
     private location: Location,
     public activatedRoute: ActivatedRoute,
     private facadeService: FacadeService,
-    private maestrosService: MaestrosService
+    private maestrosService: MaestrosService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -100,7 +103,8 @@ export class RegistroMaestrosComponent implements OnInit {
           // Redirigir o mostrar mensaje de éxito
           alert("Maestro registrado exitosamente");
           console.log("Maestro registrado: ", response);
-          if (this.token && this.token !== "") {
+          const token = this.facadeService.getSessionToken();
+          if (token) {
             this.router.navigate(["maestros"]);
           } else {
             this.router.navigate(["/"]);
@@ -128,15 +132,28 @@ export class RegistroMaestrosComponent implements OnInit {
       return false;
     }
 
-    this.maestrosService.actualizarMaestro(this.maestro).subscribe(
-      (response) => {
-        alert("Maestro actualizado correctamente");
-        console.log("Maestro actualizado: ", response);
-        this.router.navigate(["maestros"]);
-      }, (error) => {
-        alert("No se pudo actualizar el maestro");
+    const dialogRef = this.dialog.open(EditarUserModalComponent, {
+      data: {
+        tipo: 'maestro',
+        nombre: this.maestro.first_name + ' ' + this.maestro.last_name
+      },
+      height: '288px',
+      width: '328px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.isEdit) {
+        this.maestrosService.actualizarMaestro(this.maestro).subscribe(
+          (response) => {
+            alert("Maestro actualizado correctamente");
+            console.log("Maestro actualizado: ", response);
+            this.router.navigate(["maestros"]);
+          }, (error) => {
+            alert("No se pudo actualizar el maestro");
+          }
+        );
       }
-    );
+    });
   }
 
   //Funciones para password
